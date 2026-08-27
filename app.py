@@ -172,9 +172,17 @@ st.divider()
 if st.button("🔮 Predict Sale Price", use_container_width=True):
 
     # Create input dataframe
-    input_data = pd.DataFrame(0, index=[0], columns=feature_names)
+    # EXACTLY matching the features used during training
+    input_data = pd.DataFrame(
+        0,
+        index=[0],
+        columns=feature_names
+    )
 
-    # Fill numerical features
+    # =========================
+    # Fill Numerical Features
+    # =========================
+
     input_data["Overall Qual"] = overall_qual
     input_data["Year Built"] = year_built
     input_data["Year Remod/Add"] = year_remod
@@ -188,28 +196,16 @@ if st.button("🔮 Predict Sale Price", use_container_width=True):
     input_data["Full Bath"] = full_bath
     input_data["Half Bath"] = half_bath
 
-    # Feature Engineering
-    input_data["TotalSF"] = (
-        input_data["Total Bsmt SF"]
-        + input_data["1st Flr SF"]
-        + input_data["2nd Flr SF"]
-    )
-
-    input_data["TotalBath"] = (
-        input_data["Full Bath"]
-        + 0.5 * input_data["Half Bath"]
-    )
-
-    input_data["HouseAge"] = 2026 - input_data["Year Built"]
-
-    input_data["GarageAge"] = (
-        2026 - input_data["Garage Yr Blt"]
-    )
-
+    # =========================
     # Prediction
+    # =========================
+
     prediction = model.predict(input_data)[0]
 
+    # =========================
     # Result
+    # =========================
+
     st.success("Prediction completed successfully! 🎉")
 
     st.metric(
